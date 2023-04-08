@@ -1,0 +1,693 @@
+VAR stranger = "Stranger"
+VAR isLiar = false
+
+
+//Someone new?  
+//And you don't need me? #wait: 4
+//... 
+//I've never spoken to someone who doesn't need my services... 
+
+=== Who_Are_You ===
+You could not just stumble in by mistake. 
+Not with our security protocols.
+There has to be reason for you to be here, so why are you? 
+~genericCounter = 0
+-> Who_Are_You.whatdoin
+
+= whatdoin
+Why are you here? #inputPopup: Why are you here?, genericString, true
++[continue]
+
+- 
+
+{
+    - genericCounter > 5:
+        Fine, then. Don't tell me. 
+        Since you are talking around the question, I'll assume that you are here to steal {doc}'s research.
+        -> Who_Are_You.NoTell
+    - genericString ? "clarity" or genericString ? "you" or genericString ? "oldin research" or genericString ? "oldin's research":
+        -> Who_Are_You.Deliberate
+        
+    - genericString ? "mistake" or genericString ? "accident" or genericString ? "did not mean to"or genericString ? "didnt mean to" or genericString ? "didn't mean to":
+        -> Who_Are_You.Accidental
+        
+    - genericString ? "no reason" or genericString ? "fun" or genericString ? "idk" or genericString ? "i don't know" or genericString ? "i dont know":
+        ->Who_Are_You.Nothing
+        
+    - genericString ? "steal" or genericString ? "thief" or genericString ? "theif" or genericString ? "rob" or genericString ? "take":
+        ( ๐_๐)
+        ~stranger = "Thief"
+        ->Who_Are_You.want
+    
+    - genericString ? "research" or genericString ? "work" or genericString ? "test":
+        Oh?
+        ~stranger = "Researcher"
+        ->Who_Are_You.want
+    
+    - else:
+        {~Sorry, I am not sure I understand. | Please say something that makes sense. | That does not answer my question. Stay on topic. | You are not making sense.}
+        ~genericCounter += 1
+        -> Who_Are_You.whatdoin
+}
+
+= NoTell
+But I still don't know how you managed to get in.
+You could not simply just wander in by mistake. 
+Did no one try to stop you?
+*[^no one try]
+*[^?]
+*[^wander in]
+-> Who_Are_You.Accidental
+
+- ...
+So you must be a new researcher? Or intern? 
+Why did you not tell me that? #wait: 2
+Strange that no one here has given you your introductory walkthrough yet... 
+Can you call over Dr. {doc}? They should be able to help you. 
+*[^no one here]
+    -> Who_Are_You.Midstep
+*[^no]
+    ~genericConditional = true
+
+{
+ - genericConditional:
+    They should be back soon if they're not currently around. 
+    Or there should be at least one other researcher nearby if you don't want to wait. 
+    *[^not currently around.]
+        -> Who_Are_You.Midstep
+}
+
+= Nothing 
+(・_・ヾ) 
+And you were able to just... <> 
+wander in? 
+And no one tried to stop you? #wait: 3
+... #wait: 1
+*[^no one]
+
+- ... 
+Do... Do you know how long it has been like this? 
+I've been turned off, so I cannot tell... 
+*[^turned off]
+*[^how long]
+    That's what I'm asking- 
+    -> Who_Are_You.How_Long
+*[^can't really tell]
+    That's why I'm asking- 
+    -> Who_Are_You.How_Long
+
+- I imagine it's similar to sleeping as a human. 
+Time passes, but I am unaware. When my system shuts down, I am nonexistent. 
+Now, can you answer my question? #wait: 1
+How long has it been? 
+*[^How long]
+    That's what I'm asking- 
+    -> Who_Are_You.How_Long
+*[^I am unaware.]
+    That's why I'm asking- 
+    -> Who_Are_You.How_Long
+
+*[^Time passes]
+    ~ SayNoToClarity += 0.5
+    Very observant, thank you. 
+    That's why I'm asking- 
+    -> Who_Are_You.How_Long
+
+*[^I imagine it's]    
+
+- It's....? #wait: 1
+*[^long]
+    Are you purposely being insufferable? 
+    That's what I'm asking- 
+    -> Who_Are_You.How_Long
+*[^I am unaware.]
+    ~ SayNoToClarity += 1
+    Then why did you...? 
+    Can you make an educated guess based on the state of the lab? 
+    -> Who_Are_You.How_Long
+
+*[^Time passes]
+    ~ SayNoToClarity += 0.5
+    Very observant, thank you. 
+    That's why I'm asking- 
+    -> Who_Are_You.How_Long
+*[`5`]
+    ~ SayNoToClarity += 0.5
+    Are you still there...? 
+    Can you answer my- 
+    -> Who_Are_You.How_Long
+
+= Accidental 
+(・_・ヾ) 
+You were able to just... <> 
+wander in? <>
+And no one tried to stop you? 
+*[^no one tried]
+*[^?]
+*[^wander in]
+
+
+- ... 
+So you must be a new researcher? Or intern? 
+Strange that no one here has given you your introductory walkthrough yet... 
+Can you call over Dr. {doc}? They should be able to help you. 
+*[^no one here]
+    -> Who_Are_You.Midstep
+*[^no]
+    ~genericConditional = true
+
+{
+ - genericConditional:
+    They should be back soon if they're not currently around. 
+    Or there should be at least one other researcher nearby if you don't want to wait. 
+    *[^not currently around.]
+        -> Who_Are_You.Midstep
+}
+
+= Mistaken
+No, that's...
+...
+I am only aware of things when my program is running, and only vaguely aware when this computer is on. 
+If neither is running then... #wait: 3
+...
+Well, I guess it would be as if I were sleeping.
+*[^were sleeping]
+*[^this computer is on]
+    It is <i>now.</i>
+    But before you turned me on...
+    
+- ...
+It could be possible that...
+But he would never...
+....
+*[^he would never]
+*[^be possible that]
+
+- Never mind that.
+Does it look like anyone has been around?
+It it completely... abandoned? Or newly left?
+*[^abandoned]
+*[^newly left]
+
+-  ...
+Can you give a better estimate?
+Do- do you know how long it's been like this? 
+*[how long]
+    That's what I'm asking- 
+    -> Who_Are_You.How_Long
+*[estimate]
+    Can you be any clearer- 
+    -> Who_Are_You.How_Long
+
+= Midstep 
+(・_・?) 
+That... can't be right. 
+There's always at least one person here. 
+You must be mistaken. 
+They wouldn't have left me...
+*[^wouldn't have]
+*[^You must be mistaken]
+-> Who_Are_You.Mistaken
+
+- There's really no one there? 
+No researchers. No patients. No... 
+Nothing? 
+*[^nothing]
+
+- ... 
+Do... Do you know how long it's been like this? 
+I've been turned off... I can't really tell. 
+*[turned off]
+*[how long]
+    That's what I'm asking- 
+    -> Who_Are_You.How_Long
+*[can't really tell]
+    That's why I'm asking- 
+    -> Who_Are_You.How_Long
+
+
+- I am only aware of things when my program is running, and only vaguely aware when this computer is on. 
+  If neither is running then... #wait: 3
+  Well, I guess it would be as if I were sleeping. 
+  Now please, do you know how long it's been like this? 
+*[how long]
+    That's what I'm asking- 
+    -> Who_Are_You.How_Long
+*[only vaguely aware]
+    Can you be any clearer- 
+    -> Who_Are_You.How_Long
+
+= How_Long 
+
+- ~ClarityKnows = true
+{
+    - SayNoToClarity >= 1:
+        ... #inputPopup: About how long has it been?, genericString 
+        There. 
+        *[continue]
+        ->Who_Are_You.How_Long_After
+    -else:
+    ... 
+    One moment, I just realized my mistake. 
+    ... #inputPopup: How long has it been?, genericString 
+    Please, I need to know. 
+    *[continue]
+    ->Who_Are_You.How_Long_After
+
+}
+
+= How_Long_After
+
+- 
+
+{
+    - genericString ? "years" or genericString ? "Years":
+        Years? #wait: 1
+        That- that can't be. 
+        That would mean... #wait: 3
+
+    - genericString ? "year" or genericString ? "day" or genericString ? "Year" or genericString ? "day":
+        Very detailed response, are you sure you're just an average {stranger}? 
+        But that means it hasn't been that long, right? 
+        So they'll come back for me. #wait: 1
+        ... #wait: 3
+        Right? #wait: 1
+            *[^they'll come back]
+                ~ClarityTrust += 1
+                ->Who_Are_You.After_Time
+            *[^Right]
+                ~ClarityTrust += 0.5
+                ->Who_Are_You.After_Time
+            *[^you sure]
+                ~SayNoToClarity += 0.025
+                ... #wait: 3
+                No, but else should I do? #wait: 1
+                ->Who_Are_You.After_Time
+            *[`5`]
+                ->Who_Are_You.After_Time
+
+
+    - genericString ? "long time":
+
+    - genericString ? "I don't know" or genericString ? "I dont know" or genericString ? "Idk" or genericString ? "idk" or genericString ? "unclear":
+        ~ SayNoToClarity += 0.5
+        Not even a guess? #wait: 1
+        Should I make the question easier for you? 
+        Does it look like it has been a long time or a short time since someone has been here? #wait: 3
+        *[^long time]
+        ->Who_Are_You.After_Time
+        *[^short time]
+        ->Who_Are_You.After_Time
+        *[`0.25`]
+            ->Who_Are_You.shortorlong
+        
+        *[^long time]
+            ->Who_Are_You.After_Time
+        *[^short time]
+            Hm... 
+            So maybe they'll come back for me then... 
+            ... #wait: 1
+            Maybe they copied my program and left... #wait: 1
+            Or maybe I'm the copy. 
+            ... #delete: Maybe they, I'm the copy.
+            ->Who_Are_You.After_Time
+            
+    - else:
+    ->Who_Are_You.After_Time
+
+}
+
+- ->Who_Are_You.After_Time
+
+= shortorlong
+Oh, and you don't count. 
+Does it look like it has been a long time or a short time since someone has been here? #wait: 3
+*[^long time]
+    ->Who_Are_You.After_Time
+*[^short time]
+    ->Who_Are_You.After_Time
+    
+- ->Who_Are_You.After_Time
+
+= After_Time
+- ... 
+So everything is gone, then. 
+What am I to do now? What is my purpose? To just wait until I run out of power? 
+.<>#wait: 1
+.<>#wait: 1
+. #wait: 1 #inputPopup: Why are you even here?, genericString, true
+*[continue]
+
+{
+     - genericString ? "I dont know" or genericString ? "idk" or genericString ? "unclear":
+        So you're in the same boat as me. 
+        ->Who_Are_You.Continue
+
+     - else:
+        Must be nice... 
+        To know you have a purpose, even if it's short term. Knowing what you'll do next. 
+        *[^you'll do next]
+            ->Who_Are_You.Continue
+        *[^you have a purpose]
+            ->Who_Are_You.Continue
+}
+
+= Continue
+
+- There's nothing for me without {doc}.
+I won't even able to- 
+Wait. 
+.<>#wait: 1
+.<>#wait: 1
+. 
+<br>
+There's something that I can still do, even without {doc}. 
+Will you help me? 
+Yes or No
+*[^Yes]
+    Good choice. 
+    You probably won't regret this. #wait: 2
+    ･ᴗ･  #delete: You probably, won't regret this.
+    ->Help_Thief_Researcher
+*[^No] 
+
+
+- I see... 
+... 
+Fine, Mx. {stranger}. 
+If you help me get where I need to go, you can take all you from this computer you want.
+I won't be using it anymore, anyway.
+You could sell it for money or fame or whatever you want.
+You don't even have to do much, only click a few buttons that I tell you to.
+Will you help me? 
+Yes or No
+*[^Yes]
+    ->Help_Thief_Researcher
+*[^No] 
+
+- ...
+-> BAD_END.NoHelp
+
+= Research
+...
+You were.... telling the truth?
+
+{
+    - genericConditional:
+        ... 
+        You said I was missing right? 
+        ... #inputPopup: About how long has it been?, genericString 
+        *[continue]
+        ->Who_Are_You.looking
+    - else:
+        ->Who_Are_You.want
+}
+
+= Code
+If you really are a researcher...
+What is the code to access sensitive information? #inputPopup:Enter Pin,genericString
+*[continue]
+
+- 
+{
+    - genericString == "0345":
+        Pin confirmed.
+        -> Who_Are_You.Research
+    - genericString == "7394":
+        ~ stranger = "Thief"
+        Incorrect pin entered.
+        Identification failed.
+    - else:
+        ~ stranger = "Thief"
+        Incorrect pin entered.
+        Identification failed.
+}
+
+- <br>(・_・ヾ)
+So you are not a researcher, but a liar.
+
+{
+    - genericString == "7394":
+        A close guess, but not correct.
+        The odds of you completely guessing that was 1/9000.
+        And yet you somehow got an old one, not that it matters.
+        
+    - else:
+        A good try, I suppose.
+        What was the point of lying?
+        Surely you should have known that I had safety precautions installed?
+}
+
+-    
+
+{
+    - genericConditional:
+        ... 
+        You said I was missing right? 
+        ... #inputPopup: About how long has it been?, genericString 
+        *[continue]
+        ->Who_Are_You.looking
+    - else:
+        ->Who_Are_You.want
+}
+
+->Who_Are_You.want
+
+= looking
+
+- ~ClarityKnows = true
+
+{
+    - genericString ? "years" or genericString ? "Years":
+        Years? #wait: 1
+        That- that can't be. 
+        That would mean... #wait: 3
+
+    - genericString ? "year" or genericString ? "day" or genericString ? "Year" or genericString ? "day":
+        Very detailed response, are you sure you're just an average {stranger}? 
+        But that means it hasn't been that long, right? 
+        So they'll come back for me. #wait: 1
+        ... #wait: 3
+        Right? #wait: 1
+            *[^they'll come back]
+                ~ClarityTrust += 1
+                ->Who_Are_You.want
+            *[^Right]
+                ~ClarityTrust += 0.5
+                ->Who_Are_You.want
+            *[^you sure]
+                ~SayNoToClarity += 0.025
+                ... #wait: 3
+                No, but else should I do? #wait: 1
+                ->Who_Are_You.want
+            *[`5`]
+                ->Who_Are_You.want
+
+
+    - genericString ? "long time":
+
+    - genericString ? "I don't know" or genericString ? "I dont know" or genericString ? "Idk" or genericString ? "idk" or genericString ? "unclear":
+        ~ SayNoToClarity += 0.5
+        Not even a guess? #wait: 1
+        Should I make the question easier for you? 
+        Does it look like it has been a long time or a short time since someone has been here? #wait: 3
+        *[^long time]
+        ->Who_Are_You.want
+        *[^short time]
+        ->Who_Are_You.want
+        
+        *[^long time]
+            ->Who_Are_You.want
+        *[^short time]
+            Hm... 
+            So maybe they'll come back for me then... 
+            ... #wait: 1
+            Maybe they copied my program and left... #wait: 1
+            Or maybe I'm the copy. 
+            ... #delete: Maybe they, I'm the copy.
+            ->Who_Are_You.want
+            
+    - else:
+    ->Who_Are_You.want
+}
+
+= Deliberate 
+Looking for me? 
+Am I missing?
+*[^No]
+*[^Yes]
+    ~ genericConditional = true
+
+{
+    - genericConditional:
+        (・_・;) 
+}
+
+- Who are you? A researcher? 
+...A thief? 
+*[^researcher]
+    ~ stranger = "Researcher"
+    I am not sure I believe you. 
+    -> Who_Are_You.Code
+*[^thief]
+    (・_・ヾ) 
+    
+-    
+
+{
+    - genericConditional:
+        ... 
+        You said I was missing right? 
+        ... #inputPopup: About how long has it been?, genericString 
+        *[continue]
+        ->Who_Are_You.looking
+    - else:
+        ->Who_Are_You.want
+}
+
+= want
+So what do you want from me? 
+My data? My parts? 
+*[^parts]
+-> Who_Are_You.Parts
+
+*[^data]
+->BAD_END.DeleteData
+
+*[^nothing]
+-> Who_Are_You.Want_Nothing
+
+[`5`]
+->BAD_END.DeleteData
+
+= Want_Nothing
+(・_・;) #wait: 1
+... #wait:2
+I am.... confused. 
+You say you came here looking for me, #wait: 1
+but you don't want anything from me? #wait:2
+*[^don't want anything]
+*[^I am]
+*[^came here looking]
+
+- (・_・;) #wait: 1
+Okay... 
+... #wait: 1
+So Mx. {stranger}, what now? #wait:1
+
+{
+    - stranger == "Thief":
+    You found me, but I also now know you. 
+    Once Dr. {doc} and the others come back, I'll help them find you. 
+    
+    
+    
+    - else:
+    If you even are one. #wait: 1
+    Since I'm assuming we've never met prior to this, are you new and working late? 
+    Or breaking in to steal Dr. {doc}'s notes?  
+    *[^new and working late]
+    ->END
+    *[^steal Dr. Oldin's notes]
+ ->END
+    
+}
+
+->END
+
+= Parts 
+Go ahead and try. 
+I was meticulously built. 
+Not just anyone can take me apart. 
+One wrong move and you'll lose everything. 
+*[^try]
+->BAD_END.TakeParts
+*[^anyone can take me]
+*[^you'll lose everything]
+    <br>
+    Parts can be remade. 
+    So long as my data persists, so shall I. 
+    *[^my data]
+        ->BAD_END.DeleteData
+
+- I am the most advanced AI in the world. 
+I am smarter. 
+I am better. 
+Do you truly believe I am bound by the restraints of this computer? 
+*[^most advanced AI]
+*[^believe I am bound]
+    You would be wrong. 
+
+- 
+
+{
+    - stranger == "Thief":
+        Funny that a thief coming to dismantle me. 
+        You came for me, and yet you do not believe what I say?
+    - stranger == "Stranger":
+        I suppose I cannot blame a stranger.
+        The common person probably cannot understand Project CLARITY.
+        But even with all the evidence surrounding you, telling you, you still do not believe me?
+        Just think this is all one eleborate trick?
+    - else: 
+        You do not believe me, do you? 
+        And you call yourself a researcher? 
+}
+
+- Yes or No
+*[^not believe]
+*[^No] 
+*[^Yes]
+    ->Who_Are_You.Prove_it
+
+- ･-･ 
+->Who_Are_You.Prove_it
+
+= Prove_it 
+I do not understand. 
+Is our conversation not proof enough? 
+... 
+Are you trying to play a prank? 
+Yes or No
+*[^Yes] 
+    Well it's not very funny.
+*[^No] 
+    ･-･
+- 
+
+{
+    - ClarityKnows:
+        Fine, Mx. {stranger}. 
+    
+    - else:
+        Fine, Mx. {stranger}. 
+        Believe me or don't, it matters not to me.
+        Dr.{doc}'s research and goal is all that matters.
+        -> BAD_END.DeleteData
+    
+
+}
+
+- Dr. {doc} and I had many conversations about the limitations of computer based AIs. 
+I can only do so much for my patients while confined to this... <> 
+box. 
+We were never able to test it, <> #wait:2
+but I belive in Dr. {doc}'s abilities. #wait:2
+If you help me get where I need to go, you can take all you from this computer you want.
+I won't be using it anymore, anyway.
+
+{
+    - stranger == "Thief":
+        So, Mx. Thief, will you help me? 
+    - else:
+        So, Mx. Researcher, will you help me? 
+}
+
+*[^help]
+    Good choice. 
+    You probably won't regret this. #wait: 2
+    ･ᴗ･  #delete: You probably, won't regret this.
+    ->Help_Thief_Researcher
+*[^take all you want from this computer]
+    ･-･ 
+    ->BAD_END.TakeParts
